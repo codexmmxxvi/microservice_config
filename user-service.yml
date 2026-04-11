@@ -1,0 +1,20 @@
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+  mongodb:
+    representation:
+      uuid: standard
+    uri: ${USER_MONGODB_URI:mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:123456}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/user-service?authSource=${MONGODB_AUTH_SOURCE:admin}}
+  webflux:
+    apiversion:
+      use:
+        path-segment: 0
+
+server:
+  port: 8085
+
+jwt:
+  secret: 12345678901234567890123456789012
+  access-expiration: 900000
+  refresh-expiration: 604800000

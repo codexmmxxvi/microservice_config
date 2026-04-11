@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
+  mongodb:
+    representation:
+      uuid: standard
+    uri: ${TICKET_MONGODB_URI:mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:123456}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/ticket-service?authSource=${MONGODB_AUTH_SOURCE:admin}}
+
+server:
+  port: 8086
