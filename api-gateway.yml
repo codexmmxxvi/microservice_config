@@ -2,114 +2,66 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-get-users
+        - id: user-auth
           uri: lb://USER-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/users/
-        - id: user-register
-          uri: lb://USER-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/users/register
-        - id: user-login
-          uri: lb://USER-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/users/login
-        - id: user-update
-          uri: lb://USER-SERVICE
-          predicates:
-            - Method=PUT
-            - Path=/api/users/{id}
-        - id: user-delete
-          uri: lb://USER-SERVICE
-          predicates:
-            - Method=DELETE
-            - Path=/api/users/{id}
+            - Path=/api/users/login,/api/users/register
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /v1/$\{segment}
 
-        - id: ticket-get-all
-          uri: lb://TICKET-SERVICE
+        - id: user-resource
+          uri: lb://USER-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/ticket/
-        - id: ticket-get-by-id
-          uri: lb://TICKET-SERVICE
-          predicates:
-            - Method=GET
-            - Path=/api/ticket/{id}
-        - id: ticket-update
-          uri: lb://TICKET-SERVICE
-          predicates:
-            - Method=PATCH
-            - Path=/api/ticket/{id}
-        - id: ticket-update-items
-          uri: lb://TICKET-SERVICE
-          predicates:
-            - Method=PUT
-            - Path=/api/ticket/{id}/items
-        - id: ticket-delete
-          uri: lb://TICKET-SERVICE
-          predicates:
-            - Method=DELETE
-            - Path=/api/ticket/{id}
+            - Path=/api/users,/api/users/**
+          filters:
+            - RewritePath=/api/users(?<remaining>/?.*), /v1/users$\{remaining}
 
-        - id: order-get-all
+        - id: order-plural
           uri: lb://ORDER-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/order/
-        - id: order-create
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/order/
-        - id: order-update-status
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Method=PATCH
-            - Path=/api/order/{id}/status
+            - Path=/api/orders,/api/orders/**
+          filters:
+            - RewritePath=/api/orders(?<remaining>/?.*), /v1/orders$\{remaining}
 
-        - id: payment-get-all
+        - id: order-singular
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/order,/api/order/**
+          filters:
+            - RewritePath=/api/order(?<remaining>/?.*), /v1/orders$\{remaining}
+
+        - id: payment-plural
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/payment/
-        - id: payment-get-by-transaction-id
+            - Path=/api/payments,/api/payments/**
+          filters:
+            - RewritePath=/api/payments(?<remaining>/?.*), /v1/payments$\{remaining}
+
+        - id: payment-singular
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/payment/{transactionId}
-        - id: payment-vnpay-callback
-          uri: lb://PAYMENT-SERVICE
+            - Path=/api/payment,/api/payment/**
+          filters:
+            - RewritePath=/api/payment(?<remaining>/?.*), /v1/payments$\{remaining}
+
+        - id: ticket-plural
+          uri: lb://TICKET-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/payment/vnpay/callback
-        - id: payment-vnpay-payment
-          uri: lb://PAYMENT-SERVICE
+            - Path=/api/tickets,/api/tickets/**
+          filters:
+            - RewritePath=/api/tickets(?<remaining>/?.*), /v1/tickets$\{remaining}
+
+        - id: ticket-singular
+          uri: lb://TICKET-SERVICE
           predicates:
-            - Method=GET
-            - Path=/api/payment/vnpay-payment
-        - id: payment-create-root
-          uri: lb://PAYMENT-SERVICE
+            - Path=/api/ticket,/api/ticket/**
+          filters:
+            - RewritePath=/api/ticket(?<remaining>/?.*), /v1/tickets$\{remaining}
+
+        - id: search-resource
+          uri: lb://SEARCH-SERVICE
           predicates:
-            - Method=POST
-            - Path=/api/payment/
-        - id: payment-create
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/payment/create
-        - id: payment-refund-by-transaction-id
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/payment/{transactionId}/refund
-        - id: payment-refund
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Method=POST
-            - Path=/api/payment/refund
+            - Path=/api/search/tickets,/api/search/tickets/**
 
 server:
   port: 8080
